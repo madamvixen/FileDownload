@@ -13,6 +13,7 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.media.audiofx.BassBoost;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.ScanResult;
@@ -47,6 +48,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
@@ -163,7 +165,7 @@ public class MainActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("WIFISTATEFILE", "Inside on resume method");
+//        Log.e("WIFISTATEFILE", "Inside on resume method");
 
         IntentFilter wifiIntentFilter = new IntentFilter(WifiManager.WIFI_STATE_CHANGED_ACTION);
 
@@ -174,11 +176,23 @@ public class MainActivity extends Activity {
 
             @Override
             public void onReceive(Context context, Intent intent) {
-                //check for Wifi scan results
+
+                //Detect the enabling and disabling of Wi-Fi
                 Toast.makeText(MainActivity.this, "WIFI INTENT RECEIVED", Toast.LENGTH_SHORT).show();
                 status = intent.getBooleanExtra(WifiManager.EXTRA_NEW_STATE,wifiManager.isWifiEnabled());
-//                NetworkInfo _nInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-                isConnected = intent.getBooleanExtra("STATUS", false);
+                //isConnected = intent.getBooleanExtra("STATUS", false);
+                ConnectivityManager cm = (ConnectivityManager) getBaseContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo _nInfo = cm.getActiveNetworkInfo();  //wifiIntent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+
+                if(_nInfo!=null)
+                {
+                    Log.e(TAG, String.valueOf(_nInfo.getType()));
+                    if(_nInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                        isConnected = true;
+                        Log.e(TAG, "Connected to WIFI");
+                    }
+                }
+
                 Log.e("WIFISTATEFILE", "the wifi state is : " + status);
 
                 if (status && isConnected &&isFileDownloading && !_fileCompletelyDownloaded) {
@@ -215,8 +229,8 @@ public class MainActivity extends Activity {
                     {
                         Intent wifiIntent = new Intent(MainActivity.this, receiverDownload.getClass());
                         wifiIntent.addCategory(WifiManager.WIFI_STATE_CHANGED_ACTION);
-                        NetworkInfo _nInfo = wifiIntent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-                        wifiIntent.putExtra("STATUS", _nInfo.isConnected());
+
+//                        wifiIntent.putExtra("STATUS", _nInfo.isConnected());
                         context.sendBroadcast(wifiIntent);
                     }
                 }
@@ -233,6 +247,7 @@ public class MainActivity extends Activity {
 
                     wifiInfo = (WifiInfo) wifiManager.getConnectionInfo();
 //                    Log.e(TAG, "SSID: "+ wifiInfo.getSSID());
+
                     Conn_Name = wifiInfo.getSSID();
                     SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy HH:mm:ss");
                     Conn_Time = sdf.format(new Date());
