@@ -170,6 +170,7 @@ public class MainActivity extends Activity {
         receiverDownload = new BroadcastReceiver() {
 
             boolean status = false;
+            boolean isConnected = false;
 
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -177,10 +178,10 @@ public class MainActivity extends Activity {
                 Toast.makeText(MainActivity.this, "WIFI INTENT RECEIVED", Toast.LENGTH_SHORT).show();
                 status = intent.getBooleanExtra(WifiManager.EXTRA_NEW_STATE,wifiManager.isWifiEnabled());
 //                NetworkInfo _nInfo = intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
-
+                isConnected = intent.getBooleanExtra("STATUS", false);
                 Log.e("WIFISTATEFILE", "the wifi state is : " + status);
 
-                if (status && isFileDownloading && !_fileCompletelyDownloaded) {
+                if (status && isConnected &&isFileDownloading && !_fileCompletelyDownloaded) {
 //                    Log.e(TAG, "the wifi state is; "+status+"file download status: "+isFileDownloading);
                     new downloadTask().execute();
                 }
@@ -214,17 +215,18 @@ public class MainActivity extends Activity {
                     {
                         Intent wifiIntent = new Intent(MainActivity.this, receiverDownload.getClass());
                         wifiIntent.addCategory(WifiManager.WIFI_STATE_CHANGED_ACTION);
+                        NetworkInfo _nInfo = wifiIntent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+                        wifiIntent.putExtra("STATUS", _nInfo.isConnected());
                         context.sendBroadcast(wifiIntent);
                     }
                 }
             });
-
         }
 
         @Override
         protected Void doInBackground(Void... params) {
 
-//            Log.e(TAG, "AT START of do in background method");
+            Log.e(TAG, "AT START of do in background method");
             if(wifiManager.isWifiEnabled())
             {
                 while(!_fileCompletelyDownloaded){
@@ -240,7 +242,7 @@ public class MainActivity extends Activity {
                     else if(_onlyRUWifiDownload)
                     {
 //                        Log.e(TAG, "Download only on RU wifi - condition");
-                        if (wifiInfo.getSSID().equals("\"PowerPuffGirls\""))  //wifiInfo.getSSID().equals("\"RUWireless\"") || wifiInfo.getSSID().equals("\"RUWireless_Secure\"") || wifiInfo.getSSID().equals("\"LAWN\""))
+                        if (wifiInfo.getSSID().equals("\"RUWireless\"") || wifiInfo.getSSID().equals("\"RUWireless_Secure\"") || wifiInfo.getSSID().equals("\"LAWN\""))
                         {
                             Log.e(TAG, "Connected to PPG wifi");
                             Log.e(TAG, "Connection Time is : " + Conn_Time);
@@ -301,7 +303,7 @@ public class MainActivity extends Activity {
 
                     total += byteCount;
 
-                    if(_onlyRUWifiDownload && !wifiInfo.getSSID().equals("\"PowerPuffGirls\"")) {
+                    if(_onlyRUWifiDownload && !(wifiInfo.getSSID().equals("\"RUWireless\"") || wifiInfo.getSSID().equals("\"RUWireless_Secure\"") || wifiInfo.getSSID().equals("\"LAWN\""))) {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
