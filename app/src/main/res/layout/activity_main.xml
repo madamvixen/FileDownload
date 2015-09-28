@@ -1,0 +1,162 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
+    android:background="#CBCBCB">
+
+    <TextView android:text="URL" android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="#000000" />
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#B6B6B6"
+        android:clickable="false"
+        android:id="@+id/settingsGroup"
+        android:visibility="invisible"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignRight="@+id/linearLayout"
+        android:layout_alignEnd="@+id/linearLayout">
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Download on any Wifi"
+            android:id="@+id/anyWifiDownloadButton"
+            android:checked="true"
+            android:onClick="enableAnyWifiDownload"
+            android:textColor="#000000"
+            android:buttonTint="#000000" />
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Download only on RU Wifi"
+            android:id="@+id/ruOnlyButton"
+            android:checked="false"
+            android:onClick="enableRUWifiDownload"
+            android:textColor="#000000"
+            android:buttonTint="#000000" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:text="ok"
+            android:id="@+id/saveSettingsButton"
+            android:layout_gravity="center_horizontal"
+            android:background="#353E47"
+            android:textColor="#ffffff" />
+
+    </RadioGroup>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/urlText"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textColor="#000000"
+        android:textSize="15sp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Exit"
+        android:id="@+id/exitButton"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="#FF9900"
+        android:textColor="#ffffff" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:id="@+id/progressBar"
+        android:visibility="invisible"
+        android:progressTint="#FF9900"
+        android:layout_below="@+id/progressBarText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/urlText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/linearLayout">
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="DOWNLOAD"
+            android:id="@+id/downloadButton"
+            android:layout_below="@+id/urlText"
+            android:layout_toRightOf="@+id/logCheckBox"
+            android:layout_toEndOf="@+id/logCheckBox"
+            android:background="#353E47"
+            android:textColor="#ffffff"
+            android:layout_margin="5dp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Downloading File..."
+        android:id="@+id/progressBarText"
+        android:visibility="invisible"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="LOGS"
+        android:id="@+id/logTextView"
+        android:layout_marginTop="36dp"
+        android:layout_below="@+id/progressBar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:visibility="visible"/>
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="SHOW LOGS"
+        android:id="@+id/logCheckBox"
+        android:checked="false"
+        android:textColor="#000000"
+        android:buttonTint="#000000"
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="enableLogDisplay" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:text="ok"
+        android:id="@+id/okProgressButton"
+        android:background="#353E47"
+        android:textColor="#ffffff"
+        android:layout_below="@+id/progressBar"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible" />
+
+</RelativeLayout>
